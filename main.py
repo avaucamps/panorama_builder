@@ -22,7 +22,7 @@ def best_matches(descriptors_right, descriptors_left, distance_coeff=0.16):
         if m.distance < distance_coeff*n.distance:
             best_matches.append(m)
 
-    return best_matches
+    return np.asarray(best_matches)
 
 
 def src_keypoints_to_points(keypoints, matches):
@@ -33,7 +33,7 @@ def dst_keypoints_to_points(keypoints, matches):
     return np.float32([ keypoints[m.trainIdx].pt for m in matches ]).reshape(-1,1,2)
 
 
-def get_homography(matches, keypoints_right, keypoints_left, min_match_count = 10):
+def get_homography(matches, keypoints_right, keypoints_left, min_match_count = 4):
     homography = None
     if len(matches) > min_match_count:
         src_pts = src_keypoints_to_points(keypoints_right, matches)
@@ -74,8 +74,8 @@ def trim(frame):
 
 
 if __name__ == "__main__":
-    img_right, img_right_gray = load_image(os.path.join(BASE_PATH, '2.jpg'))
-    img_left, img_left_gray = load_image(os.path.join(BASE_PATH, '1.jpg'))
+    img_right, img_right_gray = load_image(os.path.join(BASE_PATH, 'right.jpg'))
+    img_left, img_left_gray = load_image(os.path.join(BASE_PATH, 'left.jpg'))
 
     sift = cv2.xfeatures2d.SIFT_create()
     kp1, des1 = sift.detectAndCompute(img_right_gray, None)
