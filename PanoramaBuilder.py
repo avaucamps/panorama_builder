@@ -15,23 +15,20 @@ class PanoramaBuilder(object):
     def build_panorama(self, images_path):
         images = self._load_images(images_path)
     
-        while len(images) > 1:
-            images = self._perform_sift(images)
-            images_match = self._match_images(images)
-            images_match = self._get_matches_homography(images_match)
-            images_match = self._apply_matches_homography(images_match)
+        if len(images) < 2:
+            print("Error: not enough images.")
+            return
 
-            new_images = []
-            for image_match in images_match:
-                new_image = image_match.result_image
-                new_image = crop(new_image)
-                new_images.append(
-                    Image(new_image, cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY))
-                )
+        base_images = images[:2]
+        base_image = self._compute_panorama(base_images)
+        if len(images) == 2:
+            return resize_image(base_image.image_rgb)
 
-            images = new_images
+        images = images[2:]
+        for image in images:
+            base_image = self._compute_panorama([base_image, image])
 
-        image = images[0].image_rgb
+        image = base_image.image_rgb
         image = resize_image(image)
 
         return image
@@ -44,6 +41,18 @@ class PanoramaBuilder(object):
             images.append(Image(img, img_gray))
         
         return images
+
+
+    def _compute_panorama(self, images):
+        images = self._perform_sift(images)
+        images_match = self._match_images(images)
+        images_match = self._get_matches_homography(images_match)
+        images_match = self._apply_matches_homography(images_match)
+        new_image = images_match[0].result_image
+        new_image = crop(new_image)
+        new_image = Image(new_image, cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY))
+
+        return new_image
 
 
     def _perform_sift(self, images):
