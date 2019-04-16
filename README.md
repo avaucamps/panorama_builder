@@ -14,4 +14,4 @@ Panorama with 6 images: <br>
 <img src="/images/goldengate-00.png" width="143" height="225"> <img src="/images/goldengate-01.png" width="143" height="225">
 <img src="/images/goldengate-02.png" width="143" height="225"> <img src="/images/goldengate-03.png" width="143" height="225">
 <img src="/images/goldengate-04.png" width="143" height="225"> <img src="/images/goldengate-05.png" width="143" height="225">
-![alt text](/images/golden_gate_panorama.png)
+![alt text](/images/goldengate_panorama.png)
